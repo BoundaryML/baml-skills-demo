@@ -94,18 +94,32 @@ class BamlSyncClient:
     def parse_stream(self):
       return self.__llm_stream_parser
 
-    def ExecuteSkill(self, query: str,skill_instructions: str,reference_material: typing.Optional[str] = None,
+    def Chat(self, query: str,
+        baml_options: BamlCallOptions = {},
+    ) -> str:
+        # Check if on_tick is provided
+        if 'on_tick' in baml_options:
+            __stream__ = self.stream.Chat(query=query,
+                baml_options=baml_options)
+            return __stream__.get_final_response()
+        else:
+            # Original non-streaming code
+            __result__ = self.__options.merge_options(baml_options).call_function_sync(function_name="Chat", args={
+                "query": query,
+            })
+            return typing.cast(str, __result__.cast_to(types, types, stream_types, False, __runtime__))
+    def ExecuteSkill(self, query: str,skill_instructions: str,available_tools: typing.List[str],
         baml_options: BamlCallOptions = {},
     ) -> types.SkillResult:
         # Check if on_tick is provided
         if 'on_tick' in baml_options:
-            __stream__ = self.stream.ExecuteSkill(query=query,skill_instructions=skill_instructions,reference_material=reference_material,
+            __stream__ = self.stream.ExecuteSkill(query=query,skill_instructions=skill_instructions,available_tools=available_tools,
                 baml_options=baml_options)
             return __stream__.get_final_response()
         else:
             # Original non-streaming code
             __result__ = self.__options.merge_options(baml_options).call_function_sync(function_name="ExecuteSkill", args={
-                "query": query,"skill_instructions": skill_instructions,"reference_material": reference_material,
+                "query": query,"skill_instructions": skill_instructions,"available_tools": available_tools,
             })
             return typing.cast(types.SkillResult, __result__.cast_to(types, types, stream_types, False, __runtime__))
     def ExtractResume(self, resume: str,
@@ -122,18 +136,18 @@ class BamlSyncClient:
                 "resume": resume,
             })
             return typing.cast(types.Resume, __result__.cast_to(types, types, stream_types, False, __runtime__))
-    def GeneralAssist(self, query: str,
+    def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,
         baml_options: BamlCallOptions = {},
     ) -> str:
         # Check if on_tick is provided
         if 'on_tick' in baml_options:
-            __stream__ = self.stream.GeneralAssist(query=query,
+            __stream__ = self.stream.FinishWithToolResult(query=query,skill_instructions=skill_instructions,partial_response=partial_response,tool_name=tool_name,tool_result=tool_result,
                 baml_options=baml_options)
             return __stream__.get_final_response()
         else:
             # Original non-streaming code
-            __result__ = self.__options.merge_options(baml_options).call_function_sync(function_name="GeneralAssist", args={
-                "query": query,
+            __result__ = self.__options.merge_options(baml_options).call_function_sync(function_name="FinishWithToolResult", args={
+                "query": query,"skill_instructions": skill_instructions,"partial_response": partial_response,"tool_name": tool_name,"tool_result": tool_result,
             })
             return typing.cast(str, __result__.cast_to(types, types, stream_types, False, __runtime__))
     def SelectSkill(self, query: str,skills: typing.List["types.SkillOption"],
@@ -159,11 +173,23 @@ class BamlStreamClient:
     def __init__(self, options: DoNotUseDirectlyCallManager):
         self.__options = options
 
-    def ExecuteSkill(self, query: str,skill_instructions: str,reference_material: typing.Optional[str] = None,
+    def Chat(self, query: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.BamlSyncStream[str, str]:
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="Chat", args={
+            "query": query,
+        })
+        return baml_py.BamlSyncStream[str, str](
+          __result__,
+          lambda x: typing.cast(str, x.cast_to(types, types, stream_types, True, __runtime__)),
+          lambda x: typing.cast(str, x.cast_to(types, types, stream_types, False, __runtime__)),
+          __ctx__,
+        )
+    def ExecuteSkill(self, query: str,skill_instructions: str,available_tools: typing.List[str],
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[stream_types.SkillResult, types.SkillResult]:
         __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="ExecuteSkill", args={
-            "query": query,"skill_instructions": skill_instructions,"reference_material": reference_material,
+            "query": query,"skill_instructions": skill_instructions,"available_tools": available_tools,
         })
         return baml_py.BamlSyncStream[stream_types.SkillResult, types.SkillResult](
           __result__,
@@ -183,11 +209,11 @@ class BamlStreamClient:
           lambda x: typing.cast(types.Resume, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def GeneralAssist(self, query: str,
+    def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlSyncStream[str, str]:
-        __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="GeneralAssist", args={
-            "query": query,
+        __ctx__, __result__ = self.__options.merge_options(baml_options).create_sync_stream(function_name="FinishWithToolResult", args={
+            "query": query,"skill_instructions": skill_instructions,"partial_response": partial_response,"tool_name": tool_name,"tool_result": tool_result,
         })
         return baml_py.BamlSyncStream[str, str](
           __result__,
@@ -215,11 +241,18 @@ class BamlHttpRequestClient:
     def __init__(self, options: DoNotUseDirectlyCallManager):
         self.__options = options
 
-    def ExecuteSkill(self, query: str,skill_instructions: str,reference_material: typing.Optional[str] = None,
+    def Chat(self, query: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="Chat", args={
+            "query": query,
+        }, mode="request")
+        return __result__
+    def ExecuteSkill(self, query: str,skill_instructions: str,available_tools: typing.List[str],
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExecuteSkill", args={
-            "query": query,"skill_instructions": skill_instructions,"reference_material": reference_material,
+            "query": query,"skill_instructions": skill_instructions,"available_tools": available_tools,
         }, mode="request")
         return __result__
     def ExtractResume(self, resume: str,
@@ -229,11 +262,11 @@ class BamlHttpRequestClient:
             "resume": resume,
         }, mode="request")
         return __result__
-    def GeneralAssist(self, query: str,
+    def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
-        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="GeneralAssist", args={
-            "query": query,
+        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="FinishWithToolResult", args={
+            "query": query,"skill_instructions": skill_instructions,"partial_response": partial_response,"tool_name": tool_name,"tool_result": tool_result,
         }, mode="request")
         return __result__
     def SelectSkill(self, query: str,skills: typing.List["types.SkillOption"],
@@ -251,11 +284,18 @@ class BamlHttpStreamRequestClient:
     def __init__(self, options: DoNotUseDirectlyCallManager):
         self.__options = options
 
-    def ExecuteSkill(self, query: str,skill_instructions: str,reference_material: typing.Optional[str] = None,
+    def Chat(self, query: str,
+        baml_options: BamlCallOptions = {},
+    ) -> baml_py.baml_py.HTTPRequest:
+        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="Chat", args={
+            "query": query,
+        }, mode="stream")
+        return __result__
+    def ExecuteSkill(self, query: str,skill_instructions: str,available_tools: typing.List[str],
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="ExecuteSkill", args={
-            "query": query,"skill_instructions": skill_instructions,"reference_material": reference_material,
+            "query": query,"skill_instructions": skill_instructions,"available_tools": available_tools,
         }, mode="stream")
         return __result__
     def ExtractResume(self, resume: str,
@@ -265,11 +305,11 @@ class BamlHttpStreamRequestClient:
             "resume": resume,
         }, mode="stream")
         return __result__
-    def GeneralAssist(self, query: str,
+    def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
-        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="GeneralAssist", args={
-            "query": query,
+        __result__ = self.__options.merge_options(baml_options).create_http_request_sync(function_name="FinishWithToolResult", args={
+            "query": query,"skill_instructions": skill_instructions,"partial_response": partial_response,"tool_name": tool_name,"tool_result": tool_result,
         }, mode="stream")
         return __result__
     def SelectSkill(self, query: str,skills: typing.List["types.SkillOption"],

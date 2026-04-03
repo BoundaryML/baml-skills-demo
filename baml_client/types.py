@@ -37,14 +37,8 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (1)
+# Generated enums (0)
 # #########################################################################
-
-class ActionType(str, Enum):
-    Checkout = "Checkout"
-    Return = "Return"
-    ReportDamage = "ReportDamage"
-    NoAction = "NoAction"
 
 # #########################################################################
 # Generated classes (5)
@@ -61,18 +55,16 @@ class SkillOption(BaseModel):
     description: str
 
 class SkillResult(BaseModel):
-    plain_summary: str = Field(description='Plain English explanation of what\'s happening, for the user.')
-    messages: typing.List["StaffMessage"] = Field(description='Messages to send to staff. May be empty for pure info lookups.')
-    action: ActionType = Field(description='Action to take if the user confirms.')
-    action_item_id: typing.Optional[str] = Field(default=None, description='Boat code for the action, e.g. \'TOV-001\'. Null if not applicable.')
+    response: str = Field(description='Response text for the user. If a tool is needed, explain what you\'re computing but don\'t guess the answer.')
+    tool_request: typing.Optional["ToolRequest"] = Field(default=None, description='Optional tool to call. Null if no tool is needed.')
 
 class SkillSelection(BaseModel):
     selected_skill: typing.Optional[str] = Field(default=None, description='Skill name to activate, or null if none match.')
-    reasoning: str = Field(description='Why this skill was chosen (or why none matched).')
+    reasoning: str = Field(description='One-sentence explanation.')
 
-class StaffMessage(BaseModel):
-    recipient: str = Field(description='Staff member name: \'Captain Brillig\', \'Mimsy\', or \'The Bandersnatch\'.')
-    message: str = Field(description='The drafted message in the recipient\'s required style and terminology.')
+class ToolRequest(BaseModel):
+    tool: str = Field(description='Tool name, e.g. \'compute\'.')
+    input: str = Field(description='Input to pass to the tool, e.g. a Python expression.')
 
 # #########################################################################
 # Generated type aliases (0)

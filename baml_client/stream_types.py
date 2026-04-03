@@ -37,18 +37,16 @@ class SkillOption(BaseModel):
     description: typing.Optional[str] = None
 
 class SkillResult(BaseModel):
-    plain_summary: typing.Optional[str] = Field(default=None, description='Plain English explanation of what\'s happening, for the user.')
-    messages: typing.List["StaffMessage"] = Field(description='Messages to send to staff. May be empty for pure info lookups.')
-    action: typing.Optional[types.ActionType] = Field(default=None, description='Action to take if the user confirms.')
-    action_item_id: typing.Optional[str] = Field(default=None, description='Boat code for the action, e.g. \'TOV-001\'. Null if not applicable.')
+    response: typing.Optional[str] = Field(default=None, description='Response text for the user. If a tool is needed, explain what you\'re computing but don\'t guess the answer.')
+    tool_request: typing.Optional["ToolRequest"] = Field(default=None, description='Optional tool to call. Null if no tool is needed.')
 
 class SkillSelection(BaseModel):
     selected_skill: typing.Optional[str] = Field(default=None, description='Skill name to activate, or null if none match.')
-    reasoning: typing.Optional[str] = Field(default=None, description='Why this skill was chosen (or why none matched).')
+    reasoning: typing.Optional[str] = Field(default=None, description='One-sentence explanation.')
 
-class StaffMessage(BaseModel):
-    recipient: typing.Optional[str] = Field(default=None, description='Staff member name: \'Captain Brillig\', \'Mimsy\', or \'The Bandersnatch\'.')
-    message: typing.Optional[str] = Field(default=None, description='The drafted message in the recipient\'s required style and terminology.')
+class ToolRequest(BaseModel):
+    tool: typing.Optional[str] = Field(default=None, description='Tool name, e.g. \'compute\'.')
+    input: typing.Optional[str] = Field(default=None, description='Input to pass to the tool, e.g. a Python expression.')
 
 # #########################################################################
 # Generated type aliases (0)

@@ -28,10 +28,8 @@ type_map = {
     "types.SkillSelection": types.SkillSelection,
     "stream_types.SkillSelection": stream_types.SkillSelection,
 
-    "types.StaffMessage": types.StaffMessage,
-    "stream_types.StaffMessage": stream_types.StaffMessage,
+    "types.ToolRequest": types.ToolRequest,
+    "stream_types.ToolRequest": stream_types.ToolRequest,
 
-
-    "types.ActionType": types.ActionType,
 
 }

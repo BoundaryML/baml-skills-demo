@@ -20,18 +20,14 @@ from .globals import DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIM
 class TypeBuilder(type_builder.TypeBuilder):
     def __init__(self):
         super().__init__(classes=set(
-          ["Resume","SkillOption","SkillResult","SkillSelection","StaffMessage",]
+          ["Resume","SkillOption","SkillResult","SkillSelection","ToolRequest",]
         ), enums=set(
-          ["ActionType",]
+          []
         ), runtime=DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME)
 
     # #########################################################################
-    # Generated enums 1
+    # Generated enums 0
     # #########################################################################
-
-    @property
-    def ActionType(self) -> "ActionTypeViewer":
-        return ActionTypeViewer(self)
 
 
     # #########################################################################
@@ -55,64 +51,14 @@ class TypeBuilder(type_builder.TypeBuilder):
         return SkillSelectionViewer(self)
 
     @property
-    def StaffMessage(self) -> "StaffMessageViewer":
-        return StaffMessageViewer(self)
+    def ToolRequest(self) -> "ToolRequestViewer":
+        return ToolRequestViewer(self)
 
 
 
 # #########################################################################
-# Generated enums 1
+# Generated enums 0
 # #########################################################################
-
-class ActionTypeAst:
-    def __init__(self, tb: type_builder.TypeBuilder):
-        _tb = tb._tb # type: ignore (we know how to use this private attribute)
-        self._bldr = _tb.enum("ActionType")
-        self._values: typing.Set[str] = set([  "Checkout",  "Return",  "ReportDamage",  "NoAction",  ])
-        self._vals = ActionTypeValues(self._bldr, self._values)
-
-    def type(self) -> baml_py.FieldType:
-        return self._bldr.field()
-
-    @property
-    def values(self) -> "ActionTypeValues":
-        return self._vals
-
-
-class ActionTypeViewer(ActionTypeAst):
-    def __init__(self, tb: type_builder.TypeBuilder):
-        super().__init__(tb)
-
-    
-    def list_values(self) -> typing.List[typing.Tuple[str, type_builder.EnumValueViewer]]:
-        return [(name, type_builder.EnumValueViewer(self._bldr.value(name))) for name in self._values]
-    
-
-class ActionTypeValues:
-    def __init__(self, enum_bldr: baml_py.EnumBuilder, values: typing.Set[str]):
-        self.__bldr = enum_bldr
-        self.__values = values # type: ignore (we know how to use this private attribute) # noqa: F821
-
-    
-    
-    @property
-    def Checkout(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("Checkout"))
-    
-    @property
-    def Return(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("Return"))
-    
-    @property
-    def ReportDamage(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("ReportDamage"))
-    
-    @property
-    def NoAction(self) -> type_builder.EnumValueViewer:
-        return type_builder.EnumValueViewer(self.__bldr.value("NoAction"))
-    
-    
-
 
 
 # #########################################################################
@@ -217,7 +163,7 @@ class SkillResultAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
         self._bldr = _tb.class_("SkillResult")
-        self._properties: typing.Set[str] = set([  "plain_summary",  "messages",  "action",  "action_item_id",  ])
+        self._properties: typing.Set[str] = set([  "response",  "tool_request",  ])
         self._props = SkillResultProperties(self._bldr, self._properties)
 
     def type(self) -> baml_py.FieldType:
@@ -246,20 +192,12 @@ class SkillResultProperties:
     
     
     @property
-    def plain_summary(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("plain_summary"))
+    def response(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("response"))
     
     @property
-    def messages(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("messages"))
-    
-    @property
-    def action(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("action"))
-    
-    @property
-    def action_item_id(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("action_item_id"))
+    def tool_request(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("tool_request"))
     
     
 
@@ -307,22 +245,22 @@ class SkillSelectionProperties:
     
 
 
-class StaffMessageAst:
+class ToolRequestAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
-        self._bldr = _tb.class_("StaffMessage")
-        self._properties: typing.Set[str] = set([  "recipient",  "message",  ])
-        self._props = StaffMessageProperties(self._bldr, self._properties)
+        self._bldr = _tb.class_("ToolRequest")
+        self._properties: typing.Set[str] = set([  "tool",  "input",  ])
+        self._props = ToolRequestProperties(self._bldr, self._properties)
 
     def type(self) -> baml_py.FieldType:
         return self._bldr.field()
 
     @property
-    def props(self) -> "StaffMessageProperties":
+    def props(self) -> "ToolRequestProperties":
         return self._props
 
 
-class StaffMessageViewer(StaffMessageAst):
+class ToolRequestViewer(ToolRequestAst):
     def __init__(self, tb: type_builder.TypeBuilder):
         super().__init__(tb)
 
@@ -332,7 +270,7 @@ class StaffMessageViewer(StaffMessageAst):
     
 
 
-class StaffMessageProperties:
+class ToolRequestProperties:
     def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
         self.__bldr = bldr
         self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
@@ -340,12 +278,12 @@ class StaffMessageProperties:
     
     
     @property
-    def recipient(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("recipient"))
+    def tool(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("tool"))
     
     @property
-    def message(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("message"))
+    def input(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("input"))
     
     
 

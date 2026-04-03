@@ -23,6 +23,12 @@ class LlmResponseParser:
     def __init__(self, options: DoNotUseDirectlyCallManager):
         self.__options = options
 
+    def Chat(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> str:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="Chat", llm_response=llm_response, mode="request")
+        return typing.cast(str, __result__)
+
     def ExecuteSkill(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> types.SkillResult:
@@ -35,10 +41,10 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractResume", llm_response=llm_response, mode="request")
         return typing.cast(types.Resume, __result__)
 
-    def GeneralAssist(
+    def FinishWithToolResult(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> str:
-        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="GeneralAssist", llm_response=llm_response, mode="request")
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="FinishWithToolResult", llm_response=llm_response, mode="request")
         return typing.cast(str, __result__)
 
     def SelectSkill(
@@ -55,6 +61,12 @@ class LlmStreamParser:
     def __init__(self, options: DoNotUseDirectlyCallManager):
         self.__options = options
 
+    def Chat(
+        self, llm_response: str, baml_options: BamlCallOptions = {},
+    ) -> str:
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="Chat", llm_response=llm_response, mode="stream")
+        return typing.cast(str, __result__)
+
     def ExecuteSkill(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> stream_types.SkillResult:
@@ -67,10 +79,10 @@ class LlmStreamParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractResume", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.Resume, __result__)
 
-    def GeneralAssist(
+    def FinishWithToolResult(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> str:
-        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="GeneralAssist", llm_response=llm_response, mode="stream")
+        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="FinishWithToolResult", llm_response=llm_response, mode="stream")
         return typing.cast(str, __result__)
 
     def SelectSkill(
