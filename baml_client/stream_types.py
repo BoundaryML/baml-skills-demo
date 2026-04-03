@@ -26,6 +26,10 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
 # Generated classes (5)
 # #########################################################################
 
+class Compute(BaseModel):
+    tool: typing.Optional[typing_extensions.Literal['compute']] = Field(default=None, description='Must be the literal string \'compute\'.')
+    expression: typing.Optional[str] = Field(default=None, description='Python math expression, e.g. \'round(47.50 * 0.18, 2)\'.')
+
 class Resume(BaseModel):
     name: typing.Optional[str] = None
     email: typing.Optional[str] = None
@@ -38,16 +42,15 @@ class SkillOption(BaseModel):
 
 class SkillResult(BaseModel):
     response: typing.Optional[str] = Field(default=None, description='Response text for the user. If a tool is needed, explain what you\'re computing but don\'t guess the answer.')
-    tool_request: typing.Optional["ToolRequest"] = Field(default=None, description='Optional tool to call. Null if no tool is needed.')
+    tool_request: typing.Optional["Compute"] = Field(default=None, description='Optional tool call. Null if no tool is needed.')
 
 class SkillSelection(BaseModel):
     selected_skill: typing.Optional[str] = Field(default=None, description='Skill name to activate, or null if none match.')
     reasoning: typing.Optional[str] = Field(default=None, description='One-sentence explanation.')
 
-class ToolRequest(BaseModel):
-    tool: typing.Optional[str] = Field(default=None, description='Tool name, e.g. \'compute\'.')
-    input: typing.Optional[str] = Field(default=None, description='Input to pass to the tool, e.g. a Python expression.')
+# #########################################################################
+# Generated type aliases (1)
+# #########################################################################
 
-# #########################################################################
-# Generated type aliases (0)
-# #########################################################################
+
+ToolRequest: typing_extensions.TypeAlias = typing.Optional["Compute"]

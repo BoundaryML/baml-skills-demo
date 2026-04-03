@@ -44,6 +44,10 @@ def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
 # Generated classes (5)
 # #########################################################################
 
+class Compute(BaseModel):
+    tool: typing_extensions.Literal['compute'] = Field(description='Must be the literal string \'compute\'.')
+    expression: str = Field(description='Python math expression, e.g. \'round(47.50 * 0.18, 2)\'.')
+
 class Resume(BaseModel):
     name: str
     email: str
@@ -56,16 +60,15 @@ class SkillOption(BaseModel):
 
 class SkillResult(BaseModel):
     response: str = Field(description='Response text for the user. If a tool is needed, explain what you\'re computing but don\'t guess the answer.')
-    tool_request: typing.Optional["ToolRequest"] = Field(default=None, description='Optional tool to call. Null if no tool is needed.')
+    tool_request: typing.Optional["Compute"] = Field(default=None, description='Optional tool call. Null if no tool is needed.')
 
 class SkillSelection(BaseModel):
     selected_skill: typing.Optional[str] = Field(default=None, description='Skill name to activate, or null if none match.')
     reasoning: str = Field(description='One-sentence explanation.')
 
-class ToolRequest(BaseModel):
-    tool: str = Field(description='Tool name, e.g. \'compute\'.')
-    input: str = Field(description='Input to pass to the tool, e.g. a Python expression.')
+# #########################################################################
+# Generated type aliases (1)
+# #########################################################################
 
-# #########################################################################
-# Generated type aliases (0)
-# #########################################################################
+
+ToolRequest: typing_extensions.TypeAlias = "Compute"

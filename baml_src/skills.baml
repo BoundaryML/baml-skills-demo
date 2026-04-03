@@ -16,7 +16,7 @@ class SkillSelection {
   reasoning string        @description("One-sentence explanation.")
 }
 
-function SelectSkill(query: string, skills: SkillOption[]) -> SkillSelection {
+function SelectSkill(query: string, skills: SkillOption[]) -> SkillSelection? {
   client "anthropic/claude-sonnet-4-20250514"
   prompt #"
     You route user messages to the right skill. Pick the single best
@@ -33,22 +33,31 @@ function SelectSkill(query: string, skills: SkillOption[]) -> SkillSelection {
   "#
 }
 
-// ── Skill execution ────────────────────────────────────────────────────────
+// ── Tool types ─────────────────────────────────────────────────────────────
+// Each tool is a typed class. To add a new tool, define its class and add
+// it to the ToolRequest union.
 
-class ToolRequest {
-  tool string   @description("Tool name, e.g. 'compute'.")
-  input string  @description("Input to pass to the tool, e.g. a Python expression.")
+class Compute {
+  tool "compute" @description("Must be the literal string 'compute'.")
+  expression string @description("Python math expression, e.g. 'round(47.50 * 0.18, 2)'.")
 }
 
+// To add more tools:
+// class WebSearch {
+//   tool "web_search"
+//   query string
+// }
+
+type ToolRequest = Compute
+
 class SkillResult {
-  response string         @description("Response text for the user. If a tool is needed, explain what you're computing but don't guess the answer.")
-  tool_request ToolRequest? @description("Optional tool to call. Null if no tool is needed.")
+  response string           @description("Response text for the user. If a tool is needed, explain what you're computing but don't guess the answer.")
+  tool_request ToolRequest? @description("Optional tool call. Null if no tool is needed.")
 }
 
 function ExecuteSkill(
   query: string,
   skill_instructions: string,
-  available_tools: string[],
 ) -> SkillResult {
   client "anthropic/claude-sonnet-4-20250514"
   prompt #"
@@ -57,14 +66,6 @@ function ExecuteSkill(
 
     === SKILL INSTRUCTIONS ===
     {{ skill_instructions }}
-
-    === AVAILABLE TOOLS ===
-    {% if available_tools %}
-    You may request one of these tools: {{ available_tools }}
-    Set tool_request if the skill instructions tell you to use a tool.
-    {% else %}
-    No tools available.
-    {% endif %}
 
     === USER MESSAGE ===
     {{ query }}

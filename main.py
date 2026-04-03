@@ -21,7 +21,7 @@ from pathlib import Path
 import yaml
 
 from baml_client import b
-from baml_client.types import SkillOption
+from baml_client.types import Compute, SkillOption
 
 # ── Skill discovery & loading ───────────────────────────────────────────────
 
@@ -85,11 +85,6 @@ def tool_compute(expression: str) -> str:
         return f"Error: {e}"
 
 
-TOOLS: dict[str, callable] = {
-    "compute": tool_compute,
-}
-
-
 # ── Main loop ───────────────────────────────────────────────────────────────
 
 def run():
@@ -104,8 +99,6 @@ def run():
     skill_options = [
         SkillOption(name=s.name, description=s.description) for s in skills.values()
     ]
-    tool_names = list(TOOLS.keys())
-
     print("Chat agent ready. Type 'quit' to exit, 'skills' to list skills.\n")
 
     while True:
@@ -144,14 +137,13 @@ def run():
         result = b.ExecuteSkill(
             query=query,
             skill_instructions=skill.body,
-            available_tools=tool_names,
         )
 
-        if result.tool_request and result.tool_request.tool in TOOLS:
-            # Skill wants a tool call — execute it
+        if isinstance(result.tool_request, Compute):
+            # Skill requested a compute tool call — execute it
             tr = result.tool_request
-            print(f"  [tool: {tr.tool}({tr.input})]")
-            tool_result = TOOLS[tr.tool](tr.input)
+            print(f"  [tool: compute({tr.expression})]")
+            tool_result = tool_compute(tr.expression)
             print(f"  [result: {tool_result}]")
 
             # Second LLM call with the tool result
@@ -159,7 +151,7 @@ def run():
                 query=query,
                 skill_instructions=skill.body,
                 partial_response=result.response,
-                tool_name=tr.tool,
+                tool_name="compute",
                 tool_result=tool_result,
             )
             print(f"\n{response}\n")

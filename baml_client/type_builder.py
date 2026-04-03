@@ -20,7 +20,7 @@ from .globals import DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIM
 class TypeBuilder(type_builder.TypeBuilder):
     def __init__(self):
         super().__init__(classes=set(
-          ["Resume","SkillOption","SkillResult","SkillSelection","ToolRequest",]
+          ["Compute","Resume","SkillOption","SkillResult","SkillSelection",]
         ), enums=set(
           []
         ), runtime=DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME)
@@ -33,6 +33,10 @@ class TypeBuilder(type_builder.TypeBuilder):
     # #########################################################################
     # Generated classes 5
     # #########################################################################
+
+    @property
+    def Compute(self) -> "ComputeViewer":
+        return ComputeViewer(self)
 
     @property
     def Resume(self) -> "ResumeViewer":
@@ -50,10 +54,6 @@ class TypeBuilder(type_builder.TypeBuilder):
     def SkillSelection(self) -> "SkillSelectionViewer":
         return SkillSelectionViewer(self)
 
-    @property
-    def ToolRequest(self) -> "ToolRequestViewer":
-        return ToolRequestViewer(self)
-
 
 
 # #########################################################################
@@ -64,6 +64,49 @@ class TypeBuilder(type_builder.TypeBuilder):
 # #########################################################################
 # Generated classes 5
 # #########################################################################
+
+class ComputeAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("Compute")
+        self._properties: typing.Set[str] = set([  "tool",  "expression",  ])
+        self._props = ComputeProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "ComputeProperties":
+        return self._props
+
+
+class ComputeViewer(ComputeAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class ComputeProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def tool(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("tool"))
+    
+    @property
+    def expression(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("expression"))
+    
+    
+
 
 class ResumeAst:
     def __init__(self, tb: type_builder.TypeBuilder):
@@ -241,49 +284,6 @@ class SkillSelectionProperties:
     @property
     def reasoning(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("reasoning"))
-    
-    
-
-
-class ToolRequestAst:
-    def __init__(self, tb: type_builder.TypeBuilder):
-        _tb = tb._tb # type: ignore (we know how to use this private attribute)
-        self._bldr = _tb.class_("ToolRequest")
-        self._properties: typing.Set[str] = set([  "tool",  "input",  ])
-        self._props = ToolRequestProperties(self._bldr, self._properties)
-
-    def type(self) -> baml_py.FieldType:
-        return self._bldr.field()
-
-    @property
-    def props(self) -> "ToolRequestProperties":
-        return self._props
-
-
-class ToolRequestViewer(ToolRequestAst):
-    def __init__(self, tb: type_builder.TypeBuilder):
-        super().__init__(tb)
-
-    
-    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
-        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
-    
-
-
-class ToolRequestProperties:
-    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
-        self.__bldr = bldr
-        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
-
-    
-    
-    @property
-    def tool(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("tool"))
-    
-    @property
-    def input(self) -> type_builder.ClassPropertyViewer:
-        return type_builder.ClassPropertyViewer(self.__bldr.property("input"))
     
     
 

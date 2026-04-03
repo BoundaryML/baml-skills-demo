@@ -16,6 +16,9 @@ from . import stream_types
 
 type_map = {
 
+    "types.Compute": types.Compute,
+    "stream_types.Compute": stream_types.Compute,
+
     "types.Resume": types.Resume,
     "stream_types.Resume": stream_types.Resume,
 
@@ -27,9 +30,6 @@ type_map = {
 
     "types.SkillSelection": types.SkillSelection,
     "stream_types.SkillSelection": stream_types.SkillSelection,
-
-    "types.ToolRequest": types.ToolRequest,
-    "stream_types.ToolRequest": stream_types.ToolRequest,
 
 
 }
