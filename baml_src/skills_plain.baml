@@ -1,9 +1,5 @@
-// AgentSkills + BAML demo — PLAIN DATA variant.
-//
-// Skills are passed as a SkillOption[] list. The LLM picks from the list
-// and returns a SkillSelection struct. Simple and portable.
-
-// ── Skill routing (plain data) ─────────────────────────────────────────────
+// PLAIN DATA variant — skills passed as a SkillOption[] list.
+// Used by main_plain.py.
 
 class SkillOption {
   name string

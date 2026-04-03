@@ -1,20 +1,11 @@
-// Shared BAML definitions used by both the plain data and TypeBuilder
-// routing variants.
+// Shared types and functions used by both routing variants.
 
 // ── Tool types ─────────────────────────────────────────────────────────────
-// Each tool is a typed class. To add a new tool, define its class and add
-// it to the ToolRequest union.
 
 class Compute {
   tool "compute" @description("Must be the literal string 'compute'.")
   expression string @description("Python math expression, e.g. 'round(47.50 * 0.18, 2)'.")
 }
-
-// To add more tools:
-// class WebSearch {
-//   tool "web_search"
-//   query string
-// }
 
 type ToolRequest = Compute
 
@@ -44,7 +35,6 @@ function ExecuteSkill(
   "#
 }
 
-// Called after a tool returns, to produce the final response.
 function FinishWithToolResult(
   query: string,
   skill_instructions: string,

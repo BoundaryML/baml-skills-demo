@@ -1,14 +1,11 @@
-// AgentSkills + BAML demo — TYPEBUILDER variant.
-//
-// AvailableSkill is a @@dynamic enum — the harness populates it at startup
-// via TypeBuilder based on which skills are discovered on disk. The LLM
-// can only return valid skill names (or null).
+// TYPEBUILDER variant — @@dynamic enum populated at runtime.
+// Used by main_typebuilder.py.
 
 enum AvailableSkill {
   @@dynamic
 }
 
-function SelectSkill(query: string) -> AvailableSkill? {
+function SelectSkillTB(query: string) -> AvailableSkill? {
   client "anthropic/claude-sonnet-4-20250514"
   prompt #"
     You route user messages to the right skill. Pick the single best

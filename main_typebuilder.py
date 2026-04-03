@@ -145,7 +145,7 @@ def run():
         # SelectSkill returns an AvailableSkill enum value or None.
         # The enum was built from discovered skills, so the LLM can only
         # pick valid names — no string matching needed.
-        selected = b.SelectSkill(query=query, baml_options={"tb": tb})
+        selected = b.SelectSkillTB(query=query, baml_options={"tb": tb})
 
         if selected is None:
             # No skill matched — plain chat

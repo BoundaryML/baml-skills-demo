@@ -1,9 +1,7 @@
 ---
 name: jabberwocky-translate
 description: >
-  Translate between English and Jabberwocky, a nonsense dialect inspired by
-  Lewis Carroll. Use when the user asks to translate something to or from
-  Jabberwocky, or asks what a Jabberwocky word means.
+  Translate between English and Jabberwocky.
 ---
 
 # Jabberwocky Translation
