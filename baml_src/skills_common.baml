@@ -1,30 +1,5 @@
-// AgentSkills + BAML demo.
-//
-// A chat agent that dynamically gains capabilities from skill folders.
-// Skills can teach the LLM new knowledge (jabberwocky-translate) or
-// new behaviors including tool use (calculator).
-
-// ── Skill routing ──────────────────────────────────────────────────────────
-// AvailableSkill is a placeholder enum — the harness rebuilds it at startup
-// via TypeBuilder based on which skills are discovered on disk.
-
-enum AvailableSkill {
-  @@dynamic
-}
-
-function SelectSkill(query: string) -> AvailableSkill? {
-  client "anthropic/claude-sonnet-4-20250514"
-  prompt #"
-    You route user messages to the right skill. Pick the single best
-    match from the list, or return null if the message is just normal
-    conversation.
-
-    User message:
-    {{ query }}
-
-    {{ ctx.output_format }}
-  "#
-}
+// Shared BAML definitions used by both the plain data and TypeBuilder
+// routing variants.
 
 // ── Tool types ─────────────────────────────────────────────────────────────
 // Each tool is a typed class. To add a new tool, define its class and add
@@ -47,6 +22,8 @@ class SkillResult {
   response string           @description("Response text for the user. If a tool is needed, explain what you're computing but don't guess the answer.")
   tool_request ToolRequest? @description("Optional tool call. Null if no tool is needed.")
 }
+
+// ── Skill execution ────────────────────────────────────────────────────────
 
 function ExecuteSkill(
   query: string,
@@ -112,11 +89,7 @@ function Chat(query: string) -> string {
   "#
 }
 
-
 // ── Tests ──────────────────────────────────────────────────────────────────
-
-// SelectSkill tests require a TypeBuilder with AvailableSkill values
-// populated at runtime, so they're best run via the harness or pytest.
 
 test translate_to_jabberwocky {
   functions [ExecuteSkill]

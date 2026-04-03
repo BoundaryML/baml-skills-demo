@@ -22,8 +22,14 @@ type_map = {
     "types.Resume": types.Resume,
     "stream_types.Resume": stream_types.Resume,
 
+    "types.SkillOption": types.SkillOption,
+    "stream_types.SkillOption": stream_types.SkillOption,
+
     "types.SkillResult": types.SkillResult,
     "stream_types.SkillResult": stream_types.SkillResult,
+
+    "types.SkillSelection": types.SkillSelection,
+    "stream_types.SkillSelection": stream_types.SkillSelection,
 
 
     "types.AvailableSkill": types.AvailableSkill,

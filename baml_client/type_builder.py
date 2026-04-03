@@ -20,7 +20,7 @@ from .globals import DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIM
 class TypeBuilder(type_builder.TypeBuilder):
     def __init__(self):
         super().__init__(classes=set(
-          ["Compute","Resume","SkillResult",]
+          ["Compute","Resume","SkillOption","SkillResult","SkillSelection",]
         ), enums=set(
           ["AvailableSkill",]
         ), runtime=DO_NOT_USE_DIRECTLY_UNLESS_YOU_KNOW_WHAT_YOURE_DOING_RUNTIME)
@@ -35,7 +35,7 @@ class TypeBuilder(type_builder.TypeBuilder):
 
 
     # #########################################################################
-    # Generated classes 3
+    # Generated classes 5
     # #########################################################################
 
     @property
@@ -47,8 +47,16 @@ class TypeBuilder(type_builder.TypeBuilder):
         return ResumeViewer(self)
 
     @property
+    def SkillOption(self) -> "SkillOptionViewer":
+        return SkillOptionViewer(self)
+
+    @property
     def SkillResult(self) -> "SkillResultViewer":
         return SkillResultViewer(self)
+
+    @property
+    def SkillSelection(self) -> "SkillSelectionViewer":
+        return SkillSelectionViewer(self)
 
 
 
@@ -102,7 +110,7 @@ class AvailableSkillValues:
 
 
 # #########################################################################
-# Generated classes 3
+# Generated classes 5
 # #########################################################################
 
 class ComputeAst:
@@ -199,6 +207,49 @@ class ResumeProperties:
     
 
 
+class SkillOptionAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("SkillOption")
+        self._properties: typing.Set[str] = set([  "name",  "description",  ])
+        self._props = SkillOptionProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "SkillOptionProperties":
+        return self._props
+
+
+class SkillOptionViewer(SkillOptionAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class SkillOptionProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def name(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("name"))
+    
+    @property
+    def description(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("description"))
+    
+    
+
+
 class SkillResultAst:
     def __init__(self, tb: type_builder.TypeBuilder):
         _tb = tb._tb # type: ignore (we know how to use this private attribute)
@@ -238,6 +289,49 @@ class SkillResultProperties:
     @property
     def tool_request(self) -> type_builder.ClassPropertyViewer:
         return type_builder.ClassPropertyViewer(self.__bldr.property("tool_request"))
+    
+    
+
+
+class SkillSelectionAst:
+    def __init__(self, tb: type_builder.TypeBuilder):
+        _tb = tb._tb # type: ignore (we know how to use this private attribute)
+        self._bldr = _tb.class_("SkillSelection")
+        self._properties: typing.Set[str] = set([  "selected_skill",  "reasoning",  ])
+        self._props = SkillSelectionProperties(self._bldr, self._properties)
+
+    def type(self) -> baml_py.FieldType:
+        return self._bldr.field()
+
+    @property
+    def props(self) -> "SkillSelectionProperties":
+        return self._props
+
+
+class SkillSelectionViewer(SkillSelectionAst):
+    def __init__(self, tb: type_builder.TypeBuilder):
+        super().__init__(tb)
+
+    
+    def list_properties(self) -> typing.List[typing.Tuple[str, type_builder.ClassPropertyViewer]]:
+        return [(name, type_builder.ClassPropertyViewer(self._bldr.property(name))) for name in self._properties]
+    
+
+
+class SkillSelectionProperties:
+    def __init__(self, bldr: baml_py.ClassBuilder, properties: typing.Set[str]):
+        self.__bldr = bldr
+        self.__properties = properties # type: ignore (we know how to use this private attribute) # noqa: F821
+
+    
+    
+    @property
+    def selected_skill(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("selected_skill"))
+    
+    @property
+    def reasoning(self) -> type_builder.ClassPropertyViewer:
+        return type_builder.ClassPropertyViewer(self.__bldr.property("reasoning"))
     
     
 

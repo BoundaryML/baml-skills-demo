@@ -44,7 +44,7 @@ class AvailableSkill(str, Enum):
     pass
 
 # #########################################################################
-# Generated classes (3)
+# Generated classes (5)
 # #########################################################################
 
 class Compute(BaseModel):
@@ -57,9 +57,17 @@ class Resume(BaseModel):
     experience: typing.List[str]
     skills: typing.List[str]
 
+class SkillOption(BaseModel):
+    name: str
+    description: str
+
 class SkillResult(BaseModel):
     response: str = Field(description='Response text for the user. If a tool is needed, explain what you\'re computing but don\'t guess the answer.')
     tool_request: typing.Optional["Compute"] = Field(default=None, description='Optional tool call. Null if no tool is needed.')
+
+class SkillSelection(BaseModel):
+    selected_skill: typing.Optional[str] = Field(default=None, description='Skill name to activate, or null if none match.')
+    reasoning: str = Field(description='One-sentence explanation.')
 
 # #########################################################################
 # Generated type aliases (1)
