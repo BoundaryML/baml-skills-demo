@@ -5,26 +5,19 @@
 // new behaviors including tool use (calculator).
 
 // ── Skill routing ──────────────────────────────────────────────────────────
+// AvailableSkill is a placeholder enum — the harness rebuilds it at startup
+// via TypeBuilder based on which skills are discovered on disk.
 
-class SkillOption {
-  name string
-  description string
+enum AvailableSkill {
+  @@dynamic
 }
 
-class SkillSelection {
-  selected_skill string?  @description("Skill name to activate, or null if none match.")
-  reasoning string        @description("One-sentence explanation.")
-}
-
-function SelectSkill(query: string, skills: SkillOption[]) -> SkillSelection? {
+function SelectSkill(query: string) -> AvailableSkill? {
   client "anthropic/claude-sonnet-4-20250514"
   prompt #"
     You route user messages to the right skill. Pick the single best
     match from the list, or return null if the message is just normal
     conversation.
-
-    Available skills:
-    {{ skills }}
 
     User message:
     {{ query }}
@@ -122,35 +115,21 @@ function Chat(query: string) -> string {
 
 // ── Tests ──────────────────────────────────────────────────────────────────
 
-test route_translate {
-  functions [SelectSkill]
+// SelectSkill tests require a TypeBuilder with AvailableSkill values
+// populated at runtime, so they're best run via the harness or pytest.
+
+test translate_to_jabberwocky {
+  functions [ExecuteSkill]
   args {
-    query "Translate this to Jabberwocky: I went for a walk in the meadow"
-    skills [
-      { name "jabberwocky-translate", description "Translate between English and Jabberwocky dialect." },
-      { name "calculator", description "Solve math problems using the compute tool." }
-    ]
+    query "Translate to Jabberwocky: I went for a walk in the meadow at evening"
+    skill_instructions "Translate English to Jabberwocky. Vocabulary: walk/wander->gyre, meadow/field->wabe, afternoon/evening->brillig. Keep grammar intact, only swap mapped words. Show which words were swapped."
   }
 }
 
-test route_calculator {
-  functions [SelectSkill]
+test compute_tip {
+  functions [ExecuteSkill]
   args {
     query "What's 18% tip on a $47.50 bill?"
-    skills [
-      { name "jabberwocky-translate", description "Translate between English and Jabberwocky dialect." },
-      { name "calculator", description "Solve math problems using the compute tool." }
-    ]
-  }
-}
-
-test route_none {
-  functions [SelectSkill]
-  args {
-    query "Hey, how's it going?"
-    skills [
-      { name "jabberwocky-translate", description "Translate between English and Jabberwocky dialect." },
-      { name "calculator", description "Solve math problems using the compute tool." }
-    ]
+    skill_instructions "Solve math problems by using the compute tool. Parse the problem into a Python expression. Set tool_request with tool='compute' and input as the expression. Never do mental math."
   }
 }

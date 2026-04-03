@@ -49,9 +49,9 @@ class LlmResponseParser:
 
     def SelectSkill(
         self, llm_response: str, baml_options: BamlCallOptions = {},
-    ) -> types.SkillSelection:
+    ) -> typing.Optional[typing.Union[types.AvailableSkill, str]]:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="SelectSkill", llm_response=llm_response, mode="request")
-        return typing.cast(types.SkillSelection, __result__)
+        return typing.cast(typing.Optional[typing.Union[types.AvailableSkill, str]], __result__)
 
     
 
@@ -87,8 +87,8 @@ class LlmStreamParser:
 
     def SelectSkill(
         self, llm_response: str, baml_options: BamlCallOptions = {},
-    ) -> stream_types.SkillSelection:
+    ) -> typing.Optional[typing.Union[types.AvailableSkill, str]]:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="SelectSkill", llm_response=llm_response, mode="stream")
-        return typing.cast(stream_types.SkillSelection, __result__)
+        return typing.cast(typing.Optional[typing.Union[types.AvailableSkill, str]], __result__)
 
     

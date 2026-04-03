@@ -37,11 +37,14 @@ def get_checks(checks: typing.Dict[CheckName, Check]) -> typing.List[Check]:
 def all_succeeded(checks: typing.Dict[CheckName, Check]) -> bool:
     return all(check.status == "succeeded" for check in get_checks(checks))
 # #########################################################################
-# Generated enums (0)
+# Generated enums (1)
 # #########################################################################
 
+class AvailableSkill(str, Enum):
+    pass
+
 # #########################################################################
-# Generated classes (5)
+# Generated classes (3)
 # #########################################################################
 
 class Compute(BaseModel):
@@ -54,17 +57,9 @@ class Resume(BaseModel):
     experience: typing.List[str]
     skills: typing.List[str]
 
-class SkillOption(BaseModel):
-    name: str
-    description: str
-
 class SkillResult(BaseModel):
     response: str = Field(description='Response text for the user. If a tool is needed, explain what you\'re computing but don\'t guess the answer.')
     tool_request: typing.Optional["Compute"] = Field(default=None, description='Optional tool call. Null if no tool is needed.')
-
-class SkillSelection(BaseModel):
-    selected_skill: typing.Optional[str] = Field(default=None, description='Skill name to activate, or null if none match.')
-    reasoning: str = Field(description='One-sentence explanation.')
 
 # #########################################################################
 # Generated type aliases (1)

@@ -23,7 +23,7 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
     value: StreamStateValueT
     state: typing_extensions.Literal["Pending", "Incomplete", "Complete"]
 # #########################################################################
-# Generated classes (5)
+# Generated classes (3)
 # #########################################################################
 
 class Compute(BaseModel):
@@ -36,17 +36,9 @@ class Resume(BaseModel):
     experience: typing.List[str]
     skills: typing.List[str]
 
-class SkillOption(BaseModel):
-    name: typing.Optional[str] = None
-    description: typing.Optional[str] = None
-
 class SkillResult(BaseModel):
     response: typing.Optional[str] = Field(default=None, description='Response text for the user. If a tool is needed, explain what you\'re computing but don\'t guess the answer.')
     tool_request: typing.Optional["Compute"] = Field(default=None, description='Optional tool call. Null if no tool is needed.')
-
-class SkillSelection(BaseModel):
-    selected_skill: typing.Optional[str] = Field(default=None, description='Skill name to activate, or null if none match.')
-    reasoning: typing.Optional[str] = Field(default=None, description='One-sentence explanation.')
 
 # #########################################################################
 # Generated type aliases (1)
