@@ -112,21 +112,6 @@ class BamlAsyncClient:
                 "query": query,"skill_instructions": skill_instructions,
             })
             return typing.cast(types.SkillResult, __result__.cast_to(types, types, stream_types, False, __runtime__))
-    async def ExtractResume(self, resume: str,
-        baml_options: BamlCallOptions = {},
-    ) -> types.Resume:
-        # Check if on_tick is provided
-        if 'on_tick' in baml_options:
-            # Use streaming internally when on_tick is provided
-            __stream__ = self.stream.ExtractResume(resume=resume,
-                baml_options=baml_options)
-            return await __stream__.get_final_response()
-        else:
-            # Original non-streaming code
-            __result__ = await self.__options.merge_options(baml_options).call_function_async(function_name="ExtractResume", args={
-                "resume": resume,
-            })
-            return typing.cast(types.Resume, __result__.cast_to(types, types, stream_types, False, __runtime__))
     async def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,
         baml_options: BamlCallOptions = {},
     ) -> str:
@@ -205,18 +190,6 @@ class BamlStreamClient:
           lambda x: typing.cast(types.SkillResult, x.cast_to(types, types, stream_types, False, __runtime__)),
           __ctx__,
         )
-    def ExtractResume(self, resume: str,
-        baml_options: BamlCallOptions = {},
-    ) -> baml_py.BamlStream[stream_types.Resume, types.Resume]:
-        __ctx__, __result__ = self.__options.merge_options(baml_options).create_async_stream(function_name="ExtractResume", args={
-            "resume": resume,
-        })
-        return baml_py.BamlStream[stream_types.Resume, types.Resume](
-          __result__,
-          lambda x: typing.cast(stream_types.Resume, x.cast_to(types, types, stream_types, True, __runtime__)),
-          lambda x: typing.cast(types.Resume, x.cast_to(types, types, stream_types, False, __runtime__)),
-          __ctx__,
-        )
     def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.BamlStream[str, str]:
@@ -275,13 +248,6 @@ class BamlHttpRequestClient:
             "query": query,"skill_instructions": skill_instructions,
         }, mode="request")
         return __result__
-    async def ExtractResume(self, resume: str,
-        baml_options: BamlCallOptions = {},
-    ) -> baml_py.baml_py.HTTPRequest:
-        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractResume", args={
-            "resume": resume,
-        }, mode="request")
-        return __result__
     async def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,
         baml_options: BamlCallOptions = {},
     ) -> baml_py.baml_py.HTTPRequest:
@@ -323,13 +289,6 @@ class BamlHttpStreamRequestClient:
     ) -> baml_py.baml_py.HTTPRequest:
         __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExecuteSkill", args={
             "query": query,"skill_instructions": skill_instructions,
-        }, mode="stream")
-        return __result__
-    async def ExtractResume(self, resume: str,
-        baml_options: BamlCallOptions = {},
-    ) -> baml_py.baml_py.HTTPRequest:
-        __result__ = await self.__options.merge_options(baml_options).create_http_request_async(function_name="ExtractResume", args={
-            "resume": resume,
         }, mode="stream")
         return __result__
     async def FinishWithToolResult(self, query: str,skill_instructions: str,partial_response: str,tool_name: str,tool_result: str,

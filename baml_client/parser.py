@@ -35,12 +35,6 @@ class LlmResponseParser:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExecuteSkill", llm_response=llm_response, mode="request")
         return typing.cast(types.SkillResult, __result__)
 
-    def ExtractResume(
-        self, llm_response: str, baml_options: BamlCallOptions = {},
-    ) -> types.Resume:
-        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractResume", llm_response=llm_response, mode="request")
-        return typing.cast(types.Resume, __result__)
-
     def FinishWithToolResult(
         self, llm_response: str, baml_options: BamlCallOptions = {},
     ) -> str:
@@ -78,12 +72,6 @@ class LlmStreamParser:
     ) -> stream_types.SkillResult:
         __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExecuteSkill", llm_response=llm_response, mode="stream")
         return typing.cast(stream_types.SkillResult, __result__)
-
-    def ExtractResume(
-        self, llm_response: str, baml_options: BamlCallOptions = {},
-    ) -> stream_types.Resume:
-        __result__ = self.__options.merge_options(baml_options).parse_response(function_name="ExtractResume", llm_response=llm_response, mode="stream")
-        return typing.cast(stream_types.Resume, __result__)
 
     def FinishWithToolResult(
         self, llm_response: str, baml_options: BamlCallOptions = {},

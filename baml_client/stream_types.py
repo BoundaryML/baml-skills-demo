@@ -23,18 +23,12 @@ class StreamState(BaseModel, typing.Generic[StreamStateValueT]):
     value: StreamStateValueT
     state: typing_extensions.Literal["Pending", "Incomplete", "Complete"]
 # #########################################################################
-# Generated classes (5)
+# Generated classes (4)
 # #########################################################################
 
 class Compute(BaseModel):
     tool: typing.Optional[typing_extensions.Literal['compute']] = Field(default=None, description='Must be the literal string \'compute\'.')
     expression: typing.Optional[str] = Field(default=None, description='Python math expression, e.g. \'round(47.50 * 0.18, 2)\'.')
-
-class Resume(BaseModel):
-    name: typing.Optional[str] = None
-    email: typing.Optional[str] = None
-    experience: typing.List[str]
-    skills: typing.List[str]
 
 class SkillOption(BaseModel):
     name: typing.Optional[str] = None

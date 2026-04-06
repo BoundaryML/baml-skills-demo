@@ -19,9 +19,6 @@ type_map = {
     "types.Compute": types.Compute,
     "stream_types.Compute": stream_types.Compute,
 
-    "types.Resume": types.Resume,
-    "stream_types.Resume": stream_types.Resume,
-
     "types.SkillOption": types.SkillOption,
     "stream_types.SkillOption": stream_types.SkillOption,
 

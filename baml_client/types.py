@@ -44,18 +44,12 @@ class AvailableSkill(str, Enum):
     pass
 
 # #########################################################################
-# Generated classes (5)
+# Generated classes (4)
 # #########################################################################
 
 class Compute(BaseModel):
     tool: typing_extensions.Literal['compute'] = Field(description='Must be the literal string \'compute\'.')
     expression: str = Field(description='Python math expression, e.g. \'round(47.50 * 0.18, 2)\'.')
-
-class Resume(BaseModel):
-    name: str
-    email: str
-    experience: typing.List[str]
-    skills: typing.List[str]
 
 class SkillOption(BaseModel):
     name: str
